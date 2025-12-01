@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 
-export default function SignInScreen({ navigation }) {
+export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignIn = async () => {
+  const handleSignUp = async () => {
     if (!email || !password) {
-      return Alert.alert("Error", "Email and password are required!!!!");
+      return Alert.alert("Error", "Email and password are required");
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert("Done", "Account created!");
     } catch (err) {
-      Alert.alert("Login Failed", err.message);
+      Alert.alert("Signup Failed", err.message);
     }
   };
 
@@ -35,8 +36,8 @@ export default function SignInScreen({ navigation }) {
         onChangeText={setPassword}
       />
 
-      <Button title="Sign In" onPress={handleSignIn} />
-      <Button title="Create new account" onPress={() => navigation.navigate("SignUp")} />
+      <Button title="Sign Up" onPress={handleSignUp} />
+      <Button title="Have an account? Sign In" onPress={() => navigation.navigate("SignIn")} />
     </View>
   );
 }
