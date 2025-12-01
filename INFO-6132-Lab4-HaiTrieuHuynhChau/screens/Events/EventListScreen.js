@@ -21,6 +21,18 @@ export default function EventListScreen({ navigation }) {
     return unsub;
   }, []);
 
+  useLayoutEffect(() => {
+  navigation.setOptions({
+    headerRight: () => (
+      <Button title="Sign Out" onPress={() => signOut(auth)} />
+    ),
+    headerLeft: () => (
+      <Button title="New Event" onPress={() => navigation.navigate("NewEvent")} />
+    ),
+    });
+  }, []);
+
+
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <FlatList
