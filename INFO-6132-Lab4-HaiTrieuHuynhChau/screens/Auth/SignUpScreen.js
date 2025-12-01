@@ -14,7 +14,7 @@ export default function SignUpScreen({ navigation }) {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert("Done", "Account created!");
+      Alert.alert("Success", "Account created!");
     } catch (err) {
       Alert.alert("Signup Failed", err.message);
     }
@@ -37,7 +37,7 @@ export default function SignUpScreen({ navigation }) {
       />
 
       <Button title="Sign Up" onPress={handleSignUp} />
-      <Button title="Have an account? Sign In" onPress={() => navigation.navigate("SignIn")} />
+      <Button title="Sign In here" onPress={() => navigation.navigate("SignIn")} />
     </View>
   );
 }
