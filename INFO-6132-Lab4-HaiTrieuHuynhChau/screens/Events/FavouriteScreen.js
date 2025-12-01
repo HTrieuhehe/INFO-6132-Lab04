@@ -1,51 +1,65 @@
-import { useState } from "react";
-import { View, Text, Button, FlatList, TouchableOpacity, Image, Alert } from "react-native";
+import { View, Text, Button, FlatList, Image, TouchableOpacity, Alert } from "react-native";
+import { useFavourites } from "../../context/FavouriteContext";
 
-export default function FavouriteScreen({ route }) {
-  const [favourites, setFavourites] = useState([]);
+export default function FavouriteScreen({ navigation }) {
+  const { favourites, removeFavourite, clearAll } = useFavourites();
 
-  // Khi EventDetail gửi event sang
-  const newFav = route.params?.event;
-
-  if (newFav && !favourites.some((e) => e.id === newFav.id)) {
-    setFavourites([...favourites, newFav]);
-  }
-
-  const removeItem = (id) => {
-    setFavourites(favourites.filter((item) => item.id !== id));
+  const handleClearAll = () => {
+    Alert.alert("Confirm", "Clear all favourites?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "OK",
+        onPress: () => clearAll(),
+      },
+    ]);
   };
 
-  const clearAll = () => {
-    Alert.alert("Confirm", "Clear all favourites?", [
-      { text: "Cancel" },
+  const handleRemove = (id) => {
+    Alert.alert("Remove Favourite", "Do you want to remove this event?", [
+      { text: "Cancel", style: "cancel" },
       {
-        text: "Clear",
-        onPress: () => setFavourites([])
-      }
+        text: "Remove",
+        onPress: () => removeFavourite(id),
+      },
     ]);
   };
 
   return (
-    <View style={{ flex: 1, padding: 10 }}>
-      <Button title="Clear All" color="red" onPress={clearAll} />
+    <View style={{ flex: 1, padding: 20 }}>
+      <Button title="Clear All" color="red" onPress={handleClearAll} />
+
+      {favourites.length === 0 && (
+        <Text style={{ marginTop: 20 }}>No favourite events yet.</Text>
+      )}
 
       <FlatList
         data={favourites}
         keyExtractor={(item) => item.id}
+        style={{ marginTop: 20 }}
         renderItem={({ item }) => (
-          <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <Image 
+          <TouchableOpacity
+            style={{ flexDirection: "row", marginBottom: 20 }}
+            onPress={() => navigation.navigate("EventDetail", { event: item })}
+          >
+            <Image
               source={{ uri: item.image }}
-              style={{ width: 80, height: 80, borderRadius: 10, marginRight: 10 }}
+              style={{ width: 80, height: 80, borderRadius: 10, marginRight: 12 }}
             />
 
             <View style={{ flex: 1 }}>
-              <Text style={{ fontWeight: "bold" }}>{item.title}</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>{item.title}</Text>
               <Text>{item.date}</Text>
+              <Text>{item.location}</Text>
 
-              <Button title="Remove" onPress={() => removeItem(item.id)} />
+              <View style={{ marginTop: 5 }}>
+                <Button
+                  title="Remove"
+                  color="red"
+                  onPress={() => handleRemove(item.id)}
+                />
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>

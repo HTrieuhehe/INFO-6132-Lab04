@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState, useEffect } from "react";
-import { View, Text, FlatList, Button, TouchableOpacity, Image } from "react-native";
+import { View, Text, FlatList, Button, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { auth, db } from "../../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -55,6 +55,38 @@ export default function EventListScreen({ navigation }) {
           </TouchableOpacity>
         )}
       />
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate("Favourite")}
+      >
+        <Text style={styles.fabText}>❤</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  fab: {
+    position: "absolute",
+    bottom: 30,
+    right: 20,
+    backgroundColor: "#ff3366",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+  },
+  fabText: {
+    fontSize: 28,
+    color: "#fff",
+    fontWeight: "bold",
+    marginTop: -2, 
+  },
+});

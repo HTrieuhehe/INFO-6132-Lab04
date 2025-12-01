@@ -1,9 +1,13 @@
 import { View, Text, Image, Button, Alert } from "react-native";
 import { db } from "../../firebaseConfig";
 import { doc, deleteDoc } from "firebase/firestore";
+import { useFavourites } from "../../context/FavouriteContext";
+
 
 export default function EventDetailScreen({ route, navigation }) {
   const { event } = route.params;
+  const { favourites, addFavourite } = useFavourites();
+  const isFavourite = favourites.some((e) => e.id === event.id); //check event is added or not
 
   const handleDelete = () => {
     Alert.alert("Confirm", "Remove this event?", [
@@ -36,10 +40,19 @@ export default function EventDetailScreen({ route, navigation }) {
       <Text style={{ marginTop: 10 }}>{event.description}</Text>
 
       <View style={{ marginTop: 20 }}>
-        <Button 
-          title="Add to Favourite"
-          onPress={() => navigation.navigate("Favourite", { event })}
-        />
+        {
+            isFavourite ? (
+                <Button title="Added ✓" disabled={true} />
+            ) : (
+                <Button
+                title="Add to Favourite"
+                onPress={() => {
+                    addFavourite(event);
+                    Alert.alert("Added", "Event added to favourites!");
+                }}
+                />
+            )
+        }
 
         <Button 
           title="Delete Event"
